@@ -50,6 +50,8 @@ export interface BottomSheetModalProps
    */
   onDismiss?: () => void;
 
+  onLog?: (log: string) => void;
+
   /**
    * A scrollable node or normal view.
    * @type React.ReactNode[] | React.ReactNode | (({ data: any }?) => React.ReactElement)
