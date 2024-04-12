@@ -1579,7 +1579,7 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
               animatedIndex: _animatedIndex,
             },
           });
-          runOnJS(_providedOnClose)();
+          runOnJS(_providedOnClose)('_animatedIndex of useAnimatedReaction was -1');
         }
       },
       [handleOnChange, _providedOnClose]
