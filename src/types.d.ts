@@ -96,7 +96,7 @@ export interface BottomSheetModalMethods<T = any> extends BottomSheetMethods {
    * @see {WithSpringConfig}
    * @see {WithTimingConfig}
    */
-  dismiss: (animationConfigs?: WithSpringConfig | WithTimingConfig) => void;
+  dismiss: (animationConfigs?: WithSpringConfig | WithTimingConfig, reason: string) => void;
 }
 //#endregion
 

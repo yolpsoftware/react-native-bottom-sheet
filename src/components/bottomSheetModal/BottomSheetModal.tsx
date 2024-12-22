@@ -55,6 +55,7 @@ function BottomSheetModalComponent<T = any>(
 
     // callbacks
     onChange: _providedOnChange,
+    onLog: log,
 
     // components
     children: Content,
@@ -107,13 +108,14 @@ function BottomSheetModalComponent<T = any>(
   }, []);
   // biome-ignore lint/correctness/useExhaustiveDependencies(BottomSheetModal.name): used for debug only
   const unmount = useCallback(
-    function unmount() {
+    function unmount(reason: string) {
       if (__DEV__) {
         print({
           component: BottomSheetModal.name,
           method: unmount.name,
         });
       }
+      log && log('unmount with reason ' + reason);
       const _mounted = mounted.current;
 
       // reset variables
@@ -217,7 +219,7 @@ function BottomSheetModalComponent<T = any>(
   );
   // biome-ignore lint/correctness/useExhaustiveDependencies(BottomSheetModal.name): used for debug only
   const handleDismiss = useCallback<BottomSheetModalMethods['dismiss']>(
-    function handleDismiss(animationConfigs) {
+    function handleDismiss(animationConfigs, reason) {
       if (__DEV__) {
         print({
           component: BottomSheetModal.name,
@@ -250,7 +252,7 @@ function BottomSheetModalComponent<T = any>(
         (minimized.current ||
           (currentIndexRef.current === -1 && enablePanDownToClose))
       ) {
-        unmount();
+        unmount(reason);
         return;
       }
       willUnmountSheet(key);
@@ -313,7 +315,7 @@ function BottomSheetModalComponent<T = any>(
   //#region callbacks
   // biome-ignore lint/correctness/useExhaustiveDependencies(BottomSheetModal.name): used for debug only
   const handlePortalOnUnmount = useCallback(
-    function handlePortalOnUnmount() {
+    function handlePortalOnUnmount(reason: string) {
       if (__DEV__) {
         print({
           component: BottomSheetModal.name,
@@ -335,7 +337,7 @@ function BottomSheetModalComponent<T = any>(
       forcedDismissed.current = true;
 
       if (minimized.current) {
-        unmount();
+        unmount('handlePortalOnUnmount ' + reason);
         return;
       }
       willUnmountSheet(key);
@@ -389,7 +391,7 @@ function BottomSheetModalComponent<T = any>(
   );
   // biome-ignore lint/correctness/useExhaustiveDependencies(BottomSheetModal.name): used for debug only
   const handleBottomSheetOnClose = useCallback(
-    function handleBottomSheetOnClose() {
+    function handleBottomSheetOnClose(reason: string) {
       if (__DEV__) {
         print({
           component: BottomSheetModal.name,
@@ -407,7 +409,7 @@ function BottomSheetModalComponent<T = any>(
       }
 
       if (enableDismissOnClose) {
-        unmount();
+        unmount(reason);
       }
     },
     [enableDismissOnClose, unmount]

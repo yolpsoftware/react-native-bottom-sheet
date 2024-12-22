@@ -255,7 +255,7 @@ export interface BottomSheetProps
    *
    * @type () => void;
    */
-  onClose?: () => void;
+  onClose?: (reason: string) => void;
   /**
    * Callback when the sheet about to animate to a new position.
    *
