@@ -105,7 +105,7 @@ export interface BottomSheetVariables {
    * Current sheet position index.
    * @type SharedValue<number>
    */
-  animatedIndex: SharedValue<number>;
+  animatedIndex: SharedValue<[number, string]>;
   /**
    * Current sheet position.
    * @type SharedValue<number>

@@ -38,7 +38,7 @@ export interface BottomSheetInternalContextType
   // animated values
   animatedSnapPoints: SharedValue<number[]>;
   animatedPosition: SharedValue<number>;
-  animatedIndex: SharedValue<number>;
+  animatedIndex: SharedValue<[number, string]>;
   animatedContainerHeight: SharedValue<number>;
   animatedContentHeight: SharedValue<number>;
   animatedHighestSnapPoint: SharedValue<number>;

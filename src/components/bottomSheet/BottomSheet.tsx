@@ -505,7 +505,7 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
       isInTemporaryPosition,
       keyboardBehavior,
     ]);
-    const animatedIndex = useDerivedValue(() => {
+    const animatedIndex = useDerivedValue<[number, string]>(() => {
       const adjustedSnapPoints = animatedSnapPoints.value.slice().reverse();
       const adjustedSnapPointsIndexes = animatedSnapPoints.value
         .slice()
@@ -537,7 +537,7 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
         animatedAnimationState.value === ANIMATION_STATE.RUNNING &&
         isInTemporaryPosition.value
       ) {
-        return Math.max(animatedCurrentIndex.value, currentIndex);
+        return [Math.max(animatedCurrentIndex.value, currentIndex), '1'];
       }
 
       /**
@@ -548,10 +548,10 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
         animatedAnimationSource.value === ANIMATION_SOURCE.SNAP_POINT_CHANGE &&
         animatedAnimationState.value === ANIMATION_STATE.RUNNING
       ) {
-        return animatedNextPositionIndex.value;
+        return [animatedNextPositionIndex.value, '2'];
       }
 
-      return currentIndex;
+      return [currentIndex, '3'];
     }, [
       android_keyboardInputMode,
       animatedAnimationSource,
@@ -983,7 +983,7 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
            */
           if (
             reduceMotion &&
-            animatedSnapPoints.value[animatedIndex.value] !==
+            animatedSnapPoints.value[animatedIndex.value[0]] !==
               animatedPosition.value
           ) {
             return;
@@ -1465,7 +1465,7 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
     const containerAnimatedStyle = useAnimatedStyle(
       () => ({
         opacity:
-          Platform.OS === 'android' && animatedIndex.value === -1 ? 0 : 1,
+          Platform.OS === 'android' && animatedIndex.value[0] === -1 ? 0 : 1,
         transform: [
           {
             translateY: animatedPosition.value,
@@ -1728,7 +1728,7 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
       () => animatedIndex.value,
       _animatedIndex => {
         if (_providedAnimatedIndex) {
-          _providedAnimatedIndex.value = _animatedIndex;
+          _providedAnimatedIndex.value = _animatedIndex[0];
         }
       },
       []
@@ -1771,7 +1771,7 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
           animatedNextPosition.value !== INITIAL_VALUE &&
           animatedNextPositionIndex.value !== INITIAL_VALUE &&
           (_animatedPosition !== animatedNextPosition.value ||
-            _animatedIndex !== animatedNextPositionIndex.value)
+            _animatedIndex[0] !== animatedNextPositionIndex.value)
         ) {
           return;
         }
@@ -1780,7 +1780,7 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
          * exit the method if animated index value
          * has fraction, e.g. 1.99, 0.52
          */
-        if (_animatedIndex % 1 !== 0) {
+        if (_animatedIndex[0] % 1 !== 0) {
           return;
         }
 
@@ -1805,8 +1805,8 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
          */
         if (
           reduceMotion &&
-          _animatedIndex === animatedCurrentIndex.value &&
-          animatedSnapPoints.value[_animatedIndex] !== _animatedPosition
+          _animatedIndex[0] === animatedCurrentIndex.value &&
+          animatedSnapPoints.value[_animatedIndex[0]] !== _animatedPosition
         ) {
           return;
         }
@@ -1816,7 +1816,7 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
          * than the sheet position had changed and we trigger
          * the `onChange` callback.
          */
-        if (_animatedIndex !== animatedCurrentIndex.value) {
+        if (_animatedIndex[0] !== animatedCurrentIndex.value) {
           if (__DEV__) {
             runOnJS(print)({
               component: BottomSheet.name,
@@ -1824,19 +1824,19 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
               category: 'effect',
               params: {
                 animatedCurrentIndex: animatedCurrentIndex.value,
-                animatedIndex: _animatedIndex,
+                animatedIndex: _animatedIndex[0],
               },
             });
           }
 
-          animatedCurrentIndex.value = _animatedIndex;
-          runOnJS(handleOnChange)(_animatedIndex, _animatedPosition);
+          animatedCurrentIndex.value = _animatedIndex[0];
+          runOnJS(handleOnChange)(_animatedIndex[0], _animatedPosition);
         }
 
         /**
          * if index is `-1` than we fire the `onClose` callback.
          */
-        if (_animatedIndex === -1 && _providedOnClose) {
+        if (_animatedIndex[0] === -1 && _providedOnClose) {
           if (__DEV__) {
             runOnJS(print)({
               component: BottomSheet.name,
@@ -1844,11 +1844,11 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
               category: 'effect',
               params: {
                 animatedCurrentIndex: animatedCurrentIndex.value,
-                animatedIndex: _animatedIndex,
+                animatedIndex: _animatedIndex[0],
               },
             });
           }
-          runOnJS(_providedOnClose)('_animatedIndex of useAnimatedReaction was -1');
+          runOnJS(_providedOnClose)('_animatedIndex of useAnimatedReaction was -1, reason ' + _animatedIndex[1]);
         }
       },
       [reduceMotion, handleOnChange, _providedOnClose]
