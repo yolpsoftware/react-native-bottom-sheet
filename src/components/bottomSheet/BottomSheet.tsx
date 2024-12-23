@@ -149,6 +149,7 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
       onChange: _providedOnChange,
       onClose: _providedOnClose,
       onAnimate: _providedOnAnimate,
+      onLog,
 
       // private
       $modal = false,
@@ -625,12 +626,14 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
 
     //#region animation
     const stopAnimation = useWorkletCallback(() => {
+      onLog && runOnJS(onLog)(`stopAnimation ${animatedPosition.value}`)
       cancelAnimation(animatedPosition);
       animatedAnimationSource.value = ANIMATION_SOURCE.NONE;
       animatedAnimationState.value = ANIMATION_STATE.STOPPED;
     }, [animatedPosition, animatedAnimationState, animatedAnimationSource]);
     const animateToPositionCompleted = useWorkletCallback(
       function animateToPositionCompleted(isFinished?: boolean) {
+        onLog && runOnJS(onLog)(`animateToPositionCompleted ${isFinished}`)
         if (!isFinished) {
           return;
         }
@@ -667,6 +670,7 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
         velocity = 0,
         configs?: WithTimingConfig | WithSpringConfig
       ) {
+        onLog && runOnJS(onLog)(`animateToPosition ${animatedPosition.value}, position ${position}, source ${source}`)
         if (__DEV__) {
           runOnJS(print)({
             component: BottomSheet.name,
@@ -775,6 +779,7 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
       stopAnimation();
 
       // set values
+      onLog && runOnJS(onLog)(`setToPosition ${animatedPosition.value}, targetPosition ${targetPosition}`)
       animatedPosition.value = targetPosition;
       animatedContainerHeightDidChange.value = false;
     }, []);
@@ -932,6 +937,7 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
               animationConfigs
             );
           } else {
+            onLog && runOnJS(onLog)(`evaluatePosition, isAnimatedOnMount.value is false, animateOnMount false, setPosition to ${proposedPosition}`)
             setToPosition(proposedPosition);
             isAnimatedOnMount.value = true;
           }
@@ -950,6 +956,7 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
             animatedNextPositionIndex.value === -1 &&
             !isInTemporaryPosition.value
           ) {
+            onLog && runOnJS(onLog)(`evaluatePosition, animatedAnimationState is running, animatedNextPositionIndex is -1, isInTemporaryPosition is false, setToPosition ${animatedClosedPosition.value}`)
             setToPosition(animatedClosedPosition.value);
             return;
           }
@@ -960,6 +967,7 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
            * restart the animation.
            */
           if (animatedNextPositionIndex.value !== animatedCurrentIndex.value) {
+            onLog && runOnJS(onLog)(`evaluatePosition, animatedAnimationState is running, animatedNextPositionIndex is not equal to animatedCurrentIndex, animateToPosition ${animatedSnapPoints.value[animatedNextPositionIndex.value]}`)
             animateToPosition(
               animatedSnapPoints.value[animatedNextPositionIndex.value],
               source,
@@ -998,6 +1006,7 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
          * animation.
          */
         if (animatedContainerHeightDidChange.value) {
+          onLog && runOnJS(onLog)(`evaluatePosition, animatedContainerHeightDidChange is true, setToPosition ${proposedPosition}`)
           setToPosition(proposedPosition);
           return;
         }

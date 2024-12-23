@@ -55,7 +55,7 @@ function BottomSheetModalComponent<T = any>(
 
     // callbacks
     onChange: _providedOnChange,
-    onLog: log,
+    onLog,
 
     // components
     children: Content,
@@ -115,7 +115,7 @@ function BottomSheetModalComponent<T = any>(
           method: unmount.name,
         });
       }
-      log && log('unmount with reason ' + reason);
+      onLog && onLog('unmount with reason ' + reason);
       const _mounted = mounted.current;
 
       // reset variables
@@ -457,6 +457,7 @@ function BottomSheetModalComponent<T = any>(
           onChange={handleBottomSheetOnChange}
           onClose={handleBottomSheetOnClose}
           onAnimate={handleBottomSheetOnAnimate}
+          onLog={onLog}
           $modal={true}
         >
           {typeof Content === 'function' ? <Content data={data} /> : Content}

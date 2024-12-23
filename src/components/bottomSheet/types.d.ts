@@ -262,6 +262,9 @@ export interface BottomSheetProps
    * @type (fromIndex: number, toIndex: number) => void;
    */
   onAnimate?: (fromIndex: number, toIndex: number) => void;
+
+  onLog?: (log: string) => void;
+
   //#endregion
 
   //#region components
