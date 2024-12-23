@@ -551,7 +551,7 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
         return [animatedNextPositionIndex.value, '2'];
       }
 
-      return [currentIndex, '3'];
+      return [currentIndex, isLayoutCalculated.value ? '3 calculated, animated position ' + animatedPosition.value : '3 not calculated'];
     }, [
       android_keyboardInputMode,
       animatedAnimationSource,
