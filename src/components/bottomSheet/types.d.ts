@@ -323,7 +323,8 @@ export type AnimateToPositionType = (
   position: number,
   source: ANIMATION_SOURCE,
   velocity?: number,
-  configs?: WithTimingConfig | WithSpringConfig
+  configs?: WithTimingConfig | WithSpringConfig,
+  reason?: string
 ) => void;
 
 export type BottomSheetGestureProps = {

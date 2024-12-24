@@ -668,9 +668,10 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
         position: number,
         source: ANIMATION_SOURCE,
         velocity = 0,
-        configs?: WithTimingConfig | WithSpringConfig
+        configs?: WithTimingConfig | WithSpringConfig,
+        reason?: string
       ) {
-        onLog && runOnJS(onLog)(`animateToPosition ${animatedPosition.value}, position ${position}, source ${source}`)
+        onLog && runOnJS(onLog)(`animateToPosition ${animatedPosition.value}, position ${position}, source ${source}, reason ${reason}`)
         if (__DEV__) {
           runOnJS(print)({
             component: BottomSheet.name,
@@ -934,7 +935,8 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
               proposedPosition,
               ANIMATION_SOURCE.MOUNT,
               undefined,
-              animationConfigs
+              animationConfigs,
+              `evaluatePosition !isAnimatedOnMount, animateOnMount`
             );
           } else {
             onLog && runOnJS(onLog)(`evaluatePosition, isAnimatedOnMount.value is false, animateOnMount false, setPosition to ${proposedPosition}`)
@@ -972,7 +974,8 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
               animatedSnapPoints.value[animatedNextPositionIndex.value],
               source,
               undefined,
-              animationConfigs
+              animationConfigs,
+              `evaluatePosition state running, animatedNextPositionIndex.value ${animatedNextPositionIndex.value}, animatedCurrentIndex.value ${animatedCurrentIndex.value}`
             );
             return;
           }
@@ -1018,7 +1021,8 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
           proposedPosition,
           source,
           undefined,
-          animationConfigs
+          animationConfigs,
+          `evaluatePosition, fall back to proposedPosition`
         );
       },
       [getEvaluatedPosition, animateToPosition, setToPosition, reduceMotion]
@@ -1075,7 +1079,8 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
           nextPosition,
           ANIMATION_SOURCE.USER,
           0,
-          animationConfigs
+          animationConfigs,
+          'handleSnapToIndex ' + index
         );
       },
       [
@@ -1134,7 +1139,8 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
           nextPosition,
           ANIMATION_SOURCE.USER,
           0,
-          animationConfigs
+          animationConfigs,
+          `handleSnapToPosition ${position}`
         );
       },
       [
@@ -1184,7 +1190,8 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
           nextPosition,
           ANIMATION_SOURCE.USER,
           0,
-          animationConfigs
+          animationConfigs,
+          `handleClose`
         );
       },
       [
@@ -1236,7 +1243,8 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
           nextPosition,
           ANIMATION_SOURCE.USER,
           0,
-          animationConfigs
+          animationConfigs,
+          `handleForceClose`
         );
       },
       [
@@ -1286,7 +1294,8 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
           nextPosition,
           ANIMATION_SOURCE.USER,
           0,
-          animationConfigs
+          animationConfigs,
+          'handleExpand'
         );
       },
       [
@@ -1337,7 +1346,8 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
           nextPosition,
           ANIMATION_SOURCE.USER,
           0,
-          animationConfigs
+          animationConfigs,
+          'handleCollapse'
         );
       },
       [
