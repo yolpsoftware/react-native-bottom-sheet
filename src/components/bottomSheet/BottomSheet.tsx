@@ -221,7 +221,7 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
         enableDynamicSizing,
         maxDynamicContentSize
       );
-    onLog?.(`animatedSnapPoints: [${animatedSnapPoints.value.map(x => x.toFixed(2)).join(', ')}]`)
+    onLog?.(`${Date.now()} BottomSheet.render, animatedSnapPoints: [${animatedSnapPoints.value.map(x => x.toFixed(2)).join(', ')}]`)
     const animatedHighestSnapPoint = useDerivedValue(
       () => animatedSnapPoints.value[animatedSnapPoints.value.length - 1],
       [animatedSnapPoints]
@@ -529,6 +529,8 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
           )
         : -1;
 
+      onLog && runOnJS(onLog)(`${Date.now()} useDerivedValue animatedIndex, isLayoutCalculated ${isLayoutCalculated.value}, snappoints ${animatedSnapPoints.value.map(x => x.toFixed(2)).join(', ')}, animatedPosition ${animatedPosition.value}`)
+
       /**
        * if the sheet is currently running an animation by the keyboard opening,
        * then we clamp the index on android with resize keyboard mode.
@@ -690,6 +692,7 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
           (animatedAnimationState.value === ANIMATION_STATE.RUNNING &&
             position === animatedNextPosition.value)
         ) {
+          onLog && runOnJS(onLog)(`${Date.now()} animateToPosition early exit because position ${position} === animatedPosition.value ${animatedPosition.value} || animatedAnimationState.value ${animatedAnimationState.value} === ANIMATION_STATE.RUNNING && position ${position} === animatedNextPosition.value ${animatedNextPosition.value}`)
           return;
         }
 
@@ -717,9 +720,11 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
           offset = animatedKeyboardHeightInContainer.value;
         }
 
-        animatedNextPositionIndex.value = animatedSnapPoints.value.indexOf(
+        const next = animatedSnapPoints.value.indexOf(
           position + offset
         );
+        onLog && runOnJS(onLog)(`${Date.now()} animateToPosition setting animatedNextPosition.value ${animatedNextPosition.value} to ${next}`)
+        animatedNextPositionIndex.value = next;
 
         /**
          * fire `onAnimate` callback
