@@ -219,7 +219,8 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
         animatedHandleHeight,
         animatedFooterHeight,
         enableDynamicSizing,
-        maxDynamicContentSize
+        maxDynamicContentSize,
+        onLog
       );
     onLog?.(`${Date.now()} BottomSheet.render, animatedSnapPoints: [${animatedSnapPoints.value.map(x => x.toFixed(2)).join(', ')}]`)
     const animatedHighestSnapPoint = useDerivedValue(
@@ -280,6 +281,7 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
         isSnapPointsNormalized = true;
       }
 
+      onLog && runOnJS(onLog)(`${Date.now()} isLayoutCalculated, isContainerHeightCalculated ${isContainerHeightCalculated}, isHandleHeightCalculated ${isHandleHeightCalculated}, isSnapPointsNormalized ${isSnapPointsNormalized}`)
       return (
         isContainerHeightCalculated &&
         isHandleHeightCalculated &&
@@ -1834,6 +1836,7 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
           _animatedIndex[0] === animatedCurrentIndex.value &&
           animatedSnapPoints.value[_animatedIndex[0]] !== _animatedPosition
         ) {
+          onLog && runOnJS(onLog)(`${Date.now()} useAnimatedReaction::OnChange, reduceMotion is enabled, animatedIndex ${_animatedIndex[0]} is equal to animatedCurrentIndex ${animatedCurrentIndex.value}, animatedSnapPoints ${animatedSnapPoints.value[_animatedIndex[0]]} is not equal to animatedPosition ${_animatedPosition}`)
           return;
         }
 

@@ -1,4 +1,5 @@
 import {
+  runOnJS,
   type SharedValue,
   useDerivedValue,
   useSharedValue,
@@ -30,7 +31,8 @@ export const useAnimatedSnapPoints = (
   handleHeight: SharedValue<number>,
   footerHeight: SharedValue<number>,
   enableDynamicSizing: BottomSheetProps['enableDynamicSizing'],
-  maxDynamicContentSize: BottomSheetProps['maxDynamicContentSize']
+  maxDynamicContentSize: BottomSheetProps['maxDynamicContentSize'],
+  onLog?: (msg: string) => void
 ): [SharedValue<number[]>, SharedValue<number>, SharedValue<boolean>] => {
   const dynamicSnapPointIndex = useSharedValue<number>(-1);
   const normalizedSnapPoints = useDerivedValue(() => {
@@ -38,6 +40,7 @@ export const useAnimatedSnapPoints = (
     const isContainerLayoutReady =
       containerHeight.value !== INITIAL_CONTAINER_HEIGHT;
     if (!isContainerLayoutReady) {
+      onLog && runOnJS(onLog)(`${Date.now()} useAnimatedSnapPoints.normalizedSnapPoints container layout not ready`)
       return [INITIAL_SNAP_POINT];
     }
 
@@ -56,16 +59,19 @@ export const useAnimatedSnapPoints = (
 
     // return normalized snap points if dynamic sizing is not enabled
     if (!enableDynamicSizing) {
+      onLog && runOnJS(onLog)(`${Date.now()} useAnimatedSnapPoints.normalizedSnapPoints no dynamic sizing, returning normalized ${_normalizedSnapPoints.map(x => x.toFixed(2)).join(', ')}`)
       return _normalizedSnapPoints;
     }
 
     // early exit, if handle height is not calculated yet.
     if (handleHeight.value === INITIAL_HANDLE_HEIGHT) {
+      onLog && runOnJS(onLog)(`${Date.now()} useAnimatedSnapPoints.normalizedSnapPoints handle height not ready, returning initial snap point`)
       return [INITIAL_SNAP_POINT];
     }
 
     // early exit, if content height is not calculated yet.
     if (contentHeight.value === INITIAL_CONTAINER_HEIGHT) {
+      onLog && runOnJS(onLog)(`${Date.now()} useAnimatedSnapPoints.normalizedSnapPoints content height not ready, returning initial snap point`)
       return [INITIAL_SNAP_POINT];
     }
 
@@ -92,6 +98,7 @@ export const useAnimatedSnapPoints = (
     dynamicSnapPointIndex.value =
       _normalizedSnapPoints.indexOf(dynamicSnapPoint);
 
+    onLog && runOnJS(onLog)(`${Date.now()} useAnimatedSnapPoints.normalizedSnapPoints dynamic snap point ${dynamicSnapPoint.toFixed(2)}, returning ${_normalizedSnapPoints.map(x => x.toFixed(2)).join(', ')}`)
     return _normalizedSnapPoints;
   }, [
     snapPoints,
@@ -132,5 +139,6 @@ export const useAnimatedSnapPoints = (
     return false;
   });
 
+  onLog && runOnJS(onLog)(`${Date.now()} useAnimatedSnapPoints returns normalized ${normalizedSnapPoints.value.map(x => x.toFixed(2)).join(', ')}, dynamicSnapPointIndex ${dynamicSnapPointIndex.value}, hasDynamicSnapPoint ${hasDynamicSnapPoint.value}`);
   return [normalizedSnapPoints, dynamicSnapPointIndex, hasDynamicSnapPoint];
 };
