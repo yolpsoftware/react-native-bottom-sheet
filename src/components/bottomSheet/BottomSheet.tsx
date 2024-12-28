@@ -1423,6 +1423,7 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
         stopAnimation,
         setScrollableRef,
         removeScrollableRef,
+        onLog,
       }),
       [
         animatedIndex,
@@ -1464,6 +1465,7 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
         removeScrollableRef,
         animateToPosition,
         stopAnimation,
+        onLog,
       ]
     );
     const externalContextVariables = useMemo(

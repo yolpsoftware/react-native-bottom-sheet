@@ -25,6 +25,7 @@ function BottomSheetViewComponent({
     animatedFooterHeight,
     enableDynamicSizing,
     animatedContentHeight,
+    onLog,
   } = useBottomSheetInternal();
   //#endregion
 
@@ -59,6 +60,9 @@ function BottomSheetViewComponent({
     (event: LayoutChangeEvent) => {
       if (enableDynamicSizing) {
         animatedContentHeight.value = event.nativeEvent.layout.height;
+        onLog && onLog(`${Date.now()} BottomSheetView handleLayout, setting content height ${event.nativeEvent.layout.height}`)
+      } else {
+        onLog && onLog(`${Date.now()} BottomSheetView handleLayout, dynamic sizing not enabled (${event.nativeEvent.layout.height})`)
       }
 
       if (onLayout) {
