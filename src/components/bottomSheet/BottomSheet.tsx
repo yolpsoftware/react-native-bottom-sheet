@@ -726,7 +726,7 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
         const next = animatedSnapPoints.value.indexOf(
           position + offset
         );
-        onLog && runOnJS(onLog)(`${Date.now()} animateToPosition setting animatedNextPosition.value ${animatedNextPosition.value} to ${next}`)
+        onLog && runOnJS(onLog)(`${Date.now()} animateToPosition setting animatedNextPosition.value ${animatedNextPosition.value} to ${next} ( = position ${position} + offset ${offset})`)
         animatedNextPositionIndex.value = next;
 
         /**
@@ -1009,6 +1009,7 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
           ) {
             return;
           }
+          onLog && runOnJS(onLog)(`${Date.now()} evaluatePosition (${reason}), animatedAnimationState is not running, animatedCurrentIndex is -1, setToPosition ${animatedClosedPosition.value}`);
           setToPosition(animatedClosedPosition.value);
           return;
         }
