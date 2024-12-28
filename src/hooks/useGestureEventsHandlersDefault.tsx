@@ -72,7 +72,7 @@ export const useGestureEventsHandlersDefault: GestureEventsHandlersHookType =
     const handleOnStart: GestureEventHandlerCallbackType = useWorkletCallback(
       function handleOnStart(__, _) {
         // cancel current animation
-        stopAnimation();
+        stopAnimation(`useGestureEventsHandlersDefault::handleOnStart`);
 
         // store current animated position
         context.value = {

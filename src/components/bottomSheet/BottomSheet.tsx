@@ -632,8 +632,8 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
     //#endregion
 
     //#region animation
-    const stopAnimation = useWorkletCallback(() => {
-      onLog && runOnJS(onLog)(`${Date.now()} ${logCounter.count++} stopAnimation ${animatedPosition.value}`)
+    const stopAnimation = useWorkletCallback((reason: string) => {
+      onLog && runOnJS(onLog)(`${Date.now()} ${logCounter.count++} stopAnimation ${animatedPosition.value} (reason ${reason})`)
       cancelAnimation(animatedPosition);
       animatedAnimationSource.value = ANIMATION_SOURCE.NONE;
       animatedAnimationState.value = ANIMATION_STATE.STOPPED;
@@ -702,7 +702,7 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
 
         // stop animation if it is running
         if (animatedAnimationState.value === ANIMATION_STATE.RUNNING) {
-          stopAnimation();
+          stopAnimation(`animateToPosition (reason ${reason}), animation already running`);
         }
 
         /**
@@ -787,7 +787,7 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
       animatedNextPositionIndex.value =
         animatedSnapPoints.value.indexOf(targetPosition);
 
-      stopAnimation();
+      stopAnimation(`setToPosition targetPosition ${targetPosition}`);
 
       // set values
       onLog && runOnJS(onLog)(`${Date.now()} ${logCounter.count++} setToPosition ${animatedPosition.value}, targetPosition ${targetPosition}`)

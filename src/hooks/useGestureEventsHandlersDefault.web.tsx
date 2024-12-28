@@ -70,7 +70,7 @@ export const useGestureEventsHandlersDefault = () => {
   const handleOnStart: GestureEventHandlerCallbackType = useWorkletCallback(
     function handleOnStart(__, { translationY }) {
       // cancel current animation
-      stopAnimation();
+      stopAnimation(`useGestureEventsHandlersDefault.web.tsx::handleOnStart`);
 
       // store current animated position
       context.value = {
