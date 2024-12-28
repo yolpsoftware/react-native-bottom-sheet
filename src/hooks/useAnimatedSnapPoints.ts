@@ -85,6 +85,8 @@ export const useAnimatedSnapPoints = (
           : containerHeight.value
       );
 
+    onLog && runOnJS(onLog)(`${Date.now()} useAnimatedSnapPoints.normalizedSnapPoints calculated dynamicSnapPoint = ${dynamicSnapPoint} from containerHeight ${containerHeight.value}, contentHeight ${contentHeight.value}, handleHeight ${handleHeight.value}, footerHeight ${footerHeight.value}, maxDynamicContentSize ${maxDynamicContentSize}`);
+
     // push dynamic snap point into the normalized snap points,
     // only if it does not exists in the provided list already.
     if (!_normalizedSnapPoints.includes(dynamicSnapPoint)) {
