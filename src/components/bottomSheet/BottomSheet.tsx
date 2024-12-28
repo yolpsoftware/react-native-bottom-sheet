@@ -47,6 +47,7 @@ import {
   usePropsValidator,
   useReactiveSharedValue,
   useScrollable,
+  logCounter,
 } from '../../hooks';
 import type { BottomSheetMethods } from '../../types';
 import {
@@ -85,7 +86,6 @@ import {
 } from './constants';
 import { styles } from './styles';
 import type { AnimateToPositionType, BottomSheetProps } from './types';
-import { logCounter } from 'src/hooks/useAnimatedSnapPoints';
 
 Animated.addWhitelistedUIProps({
   decelerationRate: true,
