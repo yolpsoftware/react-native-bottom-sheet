@@ -12,6 +12,8 @@ import {
 } from '../components/bottomSheet/constants';
 import { normalizeSnapPoint } from '../utilities';
 
+export let logCounter = { count: 0 };
+
 /**
  * Convert percentage snap points to pixels in screen and calculate
  * the accurate snap points positions.
@@ -40,7 +42,7 @@ export const useAnimatedSnapPoints = (
     const isContainerLayoutReady =
       containerHeight.value !== INITIAL_CONTAINER_HEIGHT;
     if (!isContainerLayoutReady) {
-      onLog && runOnJS(onLog)(`${Date.now()} useAnimatedSnapPoints.normalizedSnapPoints container layout not ready`)
+      onLog && runOnJS(onLog)(`${Date.now()} ${logCounter.count++} useAnimatedSnapPoints.normalizedSnapPoints container layout not ready`)
       return [INITIAL_SNAP_POINT];
     }
 
@@ -59,19 +61,19 @@ export const useAnimatedSnapPoints = (
 
     // return normalized snap points if dynamic sizing is not enabled
     if (!enableDynamicSizing) {
-      onLog && runOnJS(onLog)(`${Date.now()} useAnimatedSnapPoints.normalizedSnapPoints no dynamic sizing, returning normalized ${_normalizedSnapPoints.map(x => x.toFixed(2)).join(', ')}`)
+      onLog && runOnJS(onLog)(`${Date.now()} ${logCounter.count++} useAnimatedSnapPoints.normalizedSnapPoints no dynamic sizing, returning normalized ${_normalizedSnapPoints.map(x => x.toFixed(2)).join(', ')}`)
       return _normalizedSnapPoints;
     }
 
     // early exit, if handle height is not calculated yet.
     if (handleHeight.value === INITIAL_HANDLE_HEIGHT) {
-      onLog && runOnJS(onLog)(`${Date.now()} useAnimatedSnapPoints.normalizedSnapPoints handle height not ready, returning initial snap point`)
+      onLog && runOnJS(onLog)(`${Date.now()} ${logCounter.count++} useAnimatedSnapPoints.normalizedSnapPoints handle height not ready, returning initial snap point`)
       return [INITIAL_SNAP_POINT];
     }
 
     // early exit, if content height is not calculated yet.
     if (contentHeight.value === INITIAL_CONTAINER_HEIGHT) {
-      onLog && runOnJS(onLog)(`${Date.now()} useAnimatedSnapPoints.normalizedSnapPoints content height not ready, returning initial snap point`)
+      onLog && runOnJS(onLog)(`${Date.now()} ${logCounter.count++} useAnimatedSnapPoints.normalizedSnapPoints content height not ready, returning initial snap point`)
       return [INITIAL_SNAP_POINT];
     }
 
@@ -85,7 +87,7 @@ export const useAnimatedSnapPoints = (
           : containerHeight.value
       );
 
-    onLog && runOnJS(onLog)(`${Date.now()} useAnimatedSnapPoints.normalizedSnapPoints calculated dynamicSnapPoint = ${dynamicSnapPoint} from containerHeight ${containerHeight.value}, contentHeight ${contentHeight.value}, handleHeight ${handleHeight.value}, footerHeight ${footerHeight.value}, maxDynamicContentSize ${maxDynamicContentSize}`);
+    onLog && runOnJS(onLog)(`${Date.now()} ${logCounter.count++} useAnimatedSnapPoints.normalizedSnapPoints calculated dynamicSnapPoint = ${dynamicSnapPoint} from containerHeight ${containerHeight.value}, contentHeight ${contentHeight.value}, handleHeight ${handleHeight.value}, footerHeight ${footerHeight.value}, maxDynamicContentSize ${maxDynamicContentSize}`);
 
     // push dynamic snap point into the normalized snap points,
     // only if it does not exists in the provided list already.
@@ -100,7 +102,7 @@ export const useAnimatedSnapPoints = (
     dynamicSnapPointIndex.value =
       _normalizedSnapPoints.indexOf(dynamicSnapPoint);
 
-    onLog && runOnJS(onLog)(`${Date.now()} useAnimatedSnapPoints.normalizedSnapPoints dynamic snap point ${dynamicSnapPoint.toFixed(2)}, returning ${_normalizedSnapPoints.map(x => x.toFixed(2)).join(', ')}`)
+    onLog && runOnJS(onLog)(`${Date.now()} ${logCounter.count++} useAnimatedSnapPoints.normalizedSnapPoints dynamic snap point ${dynamicSnapPoint.toFixed(2)}, returning ${_normalizedSnapPoints.map(x => x.toFixed(2)).join(', ')}`)
     return _normalizedSnapPoints;
   }, [
     snapPoints,
@@ -141,6 +143,6 @@ export const useAnimatedSnapPoints = (
     return false;
   });
 
-  onLog && runOnJS(onLog)(`${Date.now()} useAnimatedSnapPoints returns normalized ${normalizedSnapPoints.value.map(x => x.toFixed(2)).join(', ')}, dynamicSnapPointIndex ${dynamicSnapPointIndex.value}, hasDynamicSnapPoint ${hasDynamicSnapPoint.value}`);
+  onLog && runOnJS(onLog)(`${Date.now()} ${logCounter.count++} useAnimatedSnapPoints returns normalized ${normalizedSnapPoints.value.map(x => x.toFixed(2)).join(', ')}, dynamicSnapPointIndex ${dynamicSnapPointIndex.value}, hasDynamicSnapPoint ${hasDynamicSnapPoint.value}`);
   return [normalizedSnapPoints, dynamicSnapPointIndex, hasDynamicSnapPoint];
 };
