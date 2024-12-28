@@ -211,6 +211,7 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
     );
     const animatedFooterHeight = useSharedValue(0);
     const animatedContentHeight = useSharedValue(INITIAL_CONTAINER_HEIGHT);
+    onLog?.(`${Date.now()} BottomSheet.render 1, calling useAnimatedSnapPoints with _provided ${!_providedSnapPoints ? '[null]' : `[${(_providedSnapPoints as any).value?.join ? (_providedSnapPoints as any).value.join(', ') : JSON.stringify(_providedSnapPoints)}]`}, animatedContainerHeight ${animatedContainerHeight.value}, animatedContentHeight ${animatedContentHeight.value}, animatedHandleHeight ${animatedHandleHeight.value}, animatedFooterHeight ${animatedFooterHeight.value}, enableDynamicSizing ${enableDynamicSizing}, maxDynamicContentSize ${maxDynamicContentSize}`);
     const [animatedSnapPoints, animatedDynamicSnapPointIndex] =
       useAnimatedSnapPoints(
         _providedSnapPoints,
@@ -222,7 +223,7 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
         maxDynamicContentSize,
         onLog
       );
-    onLog?.(`${Date.now()} BottomSheet.render, animatedSnapPoints: [${animatedSnapPoints.value.map(x => x.toFixed(2)).join(', ')}]`)
+    onLog?.(`${Date.now()} BottomSheet.render 2, animatedSnapPoints: [${animatedSnapPoints.value.map(x => x.toFixed(2)).join(', ')}]`)
     const animatedHighestSnapPoint = useDerivedValue(
       () => animatedSnapPoints.value[animatedSnapPoints.value.length - 1],
       [animatedSnapPoints]
