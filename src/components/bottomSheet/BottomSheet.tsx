@@ -702,7 +702,7 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
 
         // stop animation if it is running
         if (animatedAnimationState.value === ANIMATION_STATE.RUNNING) {
-          stopAnimation(`animateToPosition (reason ${reason}), animation already running`);
+          stopAnimation(`animateToPosition, animation already running (reason for animateToPosition: ${reason})`);
         }
 
         /**
@@ -1612,7 +1612,7 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
           });
         }
 
-        evaluatePosition(ANIMATION_SOURCE.SNAP_POINT_CHANGE, undefined, `useAnimatedReaction::OnSnapPointChange [${animatedSnapPoints.value.map(x => x.toFixed(2)).join(', ')}]`);
+        evaluatePosition(ANIMATION_SOURCE.SNAP_POINT_CHANGE, undefined, `useAnimatedReaction::OnSnapPointChange [${animatedSnapPoints.value.map(x => x.toFixed(2)).join(', ')}], previous [${previous?.map(x => x.toFixed(2)).join(', ')}], new [${result.map(x => x.toFixed(2)).join(', ')}], isAnimatedOnMount ${isAnimatedOnMount.value}`);
       },
       [isLayoutCalculated, animatedSnapPoints]
     );
