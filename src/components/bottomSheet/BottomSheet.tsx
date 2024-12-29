@@ -533,7 +533,7 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
           )
         : -1;
 
-      onLog && runOnJS(onLog)(`${Date.now()} ${logCounter.count++} useDerivedValue animatedIndex, isLayoutCalculated ${isLayoutCalculated.value}, snapPoints [${animatedSnapPoints.value.map(x => x.toFixed(2)).join(', ')}], animatedPosition ${animatedPosition.value}`)
+      onLog && runOnJS(onLog)(`${Date.now()} ${logCounter.count++} useDerivedValue animatedIndex, isLayoutCalculated ${isLayoutCalculated.value}, snapPoints [${animatedSnapPoints.value.map(x => x.toFixed(2)).join(', ')}], animatedPosition ${animatedPosition.value}, animatedAnimationState ${animatedAnimationSource.value}`)
 
       /**
        * if the sheet is currently running an animation by the keyboard opening,
@@ -633,14 +633,14 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
 
     //#region animation
     const stopAnimation = useWorkletCallback((reason: string) => {
-      onLog && runOnJS(onLog)(`${Date.now()} ${logCounter.count++} stopAnimation ${animatedPosition.value} (reason ${reason})`)
+      onLog && runOnJS(onLog)(`${Date.now()} ${logCounter.count++} stopAnimation ${animatedPosition.value} (reason ${reason}), setting animatedAnimationState ${animatedAnimationSource.value} to STOPPED ${ANIMATION_STATE.STOPPED}`)
       cancelAnimation(animatedPosition);
       animatedAnimationSource.value = ANIMATION_SOURCE.NONE;
       animatedAnimationState.value = ANIMATION_STATE.STOPPED;
     }, [animatedPosition, animatedAnimationState, animatedAnimationSource]);
     const animateToPositionCompleted = useWorkletCallback(
       function animateToPositionCompleted(isFinished?: boolean) {
-        onLog && runOnJS(onLog)(`${Date.now()} ${logCounter.count++} animateToPositionCompleted ${isFinished}, animatedAnimationSource ${animatedAnimationSource.value}`)
+        onLog && runOnJS(onLog)(`${Date.now()} ${logCounter.count++} animateToPositionCompleted isFinished ${isFinished}, animatedAnimationSource ${animatedAnimationSource.value}, animatedAnimationState ${animatedAnimationSource.value}`)
         if (!isFinished) {
           return;
         }
@@ -663,6 +663,7 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
 
         // reset values
         isForcedClosing.value = false;
+        onLog && runOnJS(onLog)(`${Date.now()} ${logCounter.count++} animateToPositionCompleted setting animatedAnimationSource ${animatedAnimationSource.value} to NONE, animatedAnimationState ${animatedAnimationState.value} to STOPPED ${ANIMATION_STATE.STOPPED}`)
         animatedAnimationSource.value = ANIMATION_SOURCE.NONE;
         animatedAnimationState.value = ANIMATION_STATE.STOPPED;
         animatedNextPosition.value = INITIAL_VALUE;
@@ -708,6 +709,7 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
         /**
          * set animation state to running, and source
          */
+        onLog && runOnJS(onLog)(`${Date.now()} ${logCounter.count++} animateToPosition setting animatedAnimationState ${animatedAnimationState.value} to RUNNING ${ANIMATION_STATE.RUNNING}, animatedAnimationSource ${animatedAnimationSource.value} to ${source}`)
         animatedAnimationState.value = ANIMATION_STATE.RUNNING;
         animatedAnimationSource.value = source;
 
@@ -727,7 +729,7 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
         const next = animatedSnapPoints.value.indexOf(
           position + offset
         );
-        onLog && runOnJS(onLog)(`${Date.now()} ${logCounter.count++} animateToPosition setting animatedNextPosition.value ${animatedNextPosition.value} to ${next}, which is the index of (position ${position} + offset ${offset}) in the snapPoints [${animatedSnapPoints.value.map(x => x.toFixed(2)).join(', ')}]`)
+        onLog && runOnJS(onLog)(`${Date.now()} ${logCounter.count++} animateToPosition setting animatedNextPosition.value ${animatedNextPosition.value} to ${next}, which is the index of (position ${position} + offset ${offset}) in the snapPoints [${animatedSnapPoints.value.map(x => x.toFixed(2)).join(', ')}], animatedAnimationState ${animatedAnimationState.value}, configs ${JSON.stringify(configs)}, _providedAnimationConfigs ${JSON.stringify(_providedAnimationConfigs)}`)
         animatedNextPositionIndex.value = next;
 
         /**
@@ -1010,7 +1012,7 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
           ) {
             return;
           }
-          onLog && runOnJS(onLog)(`${Date.now()} ${logCounter.count++} evaluatePosition (${reason}), animatedAnimationState is not running, animatedCurrentIndex is -1, setToPosition ${animatedClosedPosition.value}`);
+          onLog && runOnJS(onLog)(`${Date.now()} ${logCounter.count++} evaluatePosition (${reason}), animatedAnimationState is not running (${animatedAnimationState.value}), animatedCurrentIndex is -1, setToPosition ${animatedClosedPosition.value}`);
           setToPosition(animatedClosedPosition.value);
           return;
         }
